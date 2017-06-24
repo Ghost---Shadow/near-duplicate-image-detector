@@ -16,7 +16,7 @@ struct absdiff
 	}
 };
 
-long getDisimilarity(thrust::host_vector<char> h_a, thrust::host_vector<char> h_b) {
+long sumAbsoluteDifference(thrust::host_vector<char> h_a, thrust::host_vector<char> h_b) {
 	thrust::device_vector<char> d_a = h_a;
 	thrust::device_vector<char> d_b = h_b;
 
