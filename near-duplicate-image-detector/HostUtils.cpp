@@ -2,6 +2,7 @@
 #include<vector>
 #include<string>
 #include<cstdio>
+#include <filesystem>
 
 #include<opencv2\core.hpp>
 #include<opencv2\opencv.hpp>
@@ -9,6 +10,8 @@
 #include <thrust/host_vector.h>
 
 #include"HostUtils.h"
+
+namespace fs = std::experimental::filesystem;
 
 unsigned long long boolVectorToLongCpu(thrust::host_vector<bool> arr) {
 	unsigned long long result = 0;
@@ -21,6 +24,20 @@ unsigned long long boolVectorToLongCpu(thrust::host_vector<bool> arr) {
 		result |= temp << (PIXELS - i - 1);
 	}
 	return result;
+}
+
+std::vector<std::string> listFiles(std::string path) {
+	std::vector<std::string> fileNames;
+	for (auto & p : fs::recursive_directory_iterator(path)) {
+		std::string fileName = p.path().string();
+		std::string copy = fileName;
+		std::string extention = copy.substr(fileName.size() - 4);
+		if (extention == ".jpg" || extention == ".png") {
+			//std::cout << fileName << std::endl;
+			fileNames.push_back(fileName);
+		}
+	}
+	return fileNames;
 }
 
 std::vector<unsigned char> loadImage(std::string fileName, bool gray) {
@@ -38,7 +55,7 @@ std::vector<unsigned char> loadImage(std::string fileName, bool gray) {
 
 	// Get total file size
 	size_t size = img.size().area() * img.channels();
-	printf("%s %d bytes\n", fileName.c_str(), size);
+	printf("%s\t%d bytes\n", fileName.c_str(), size);
 
 	// Copy the data
 	unsigned unsigned char *ptr = (unsigned char*)img.data;

@@ -85,3 +85,17 @@ unsigned long long dHash(thrust::host_vector<unsigned char> h_img) {
 	// Compact on CPU
 	return boolVectorToLongCpu(uncompacted);
 }
+
+std::vector<unsigned long long> dHashBatch(thrust::host_vector < thrust::host_vector<unsigned char>> h_imgs) {
+	// Uncompacted results
+	thrust::device_vector<thrust::device_vector<bool>> uncompacted(h_imgs.size());
+
+	// Calculate uncompacted gradients
+
+
+	// Compact
+
+	// Results
+	thrust::host_vector<unsigned long long> h_results;	
+	return std::vector<unsigned long long>(h_results.begin(), h_results.end());
+}

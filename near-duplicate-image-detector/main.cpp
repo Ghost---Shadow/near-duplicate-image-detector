@@ -7,8 +7,10 @@
 #include"HostUtils.h"
 
 int main(void) {	
+	std::string path = "./";
+
 	// File names
-	std::vector<std::string> fileNames = { "c1.jpg","c2.jpg","c3.jpg"};
+	std::vector<std::string> fileNames = listFiles(path);
 
 	// Container for images
 	std::vector<std::vector<unsigned char>> images;
@@ -18,9 +20,7 @@ int main(void) {
 		images.push_back(loadImage(fileNames[i]));
 	}
 
-	//long result = sumAbsoluteDifference(images[0], images[1]);
-
-	//std::cout << result << std::endl;
+	// Compute hashes
 	std::vector<unsigned long long> hashes;
 	for (int i = 0; i < images.size(); i++) {
 		unsigned long long hash = dHash(images[i]);
