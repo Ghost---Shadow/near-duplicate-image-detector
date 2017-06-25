@@ -1,48 +1,14 @@
-
 #include<iostream>
 #include<vector>
 #include<string>
 #include<cstdio>
 
-#include<opencv2\core.hpp>
-#include<opencv2\opencv.hpp>
-
 #include"kernel.h"
-
-std::vector<unsigned char> loadImage(std::string fileName, bool gray = true) {
-	// Read image to mat
-	cv::Mat img = cv::imread(fileName);
-	// Format 8b BGR BGR BGR
-	img.convertTo(img, CV_8U);
-
-	// To Gray
-	if (gray)
-		cv::cvtColor(img, img, cv::COLOR_BGR2GRAY);
-
-	// Resize to nxn
-	cv::resize(img, img, { SIZE,SIZE });
-
-	// Get total file size
-	size_t size = img.size().area() * img.channels();
-	printf("%s %d bytes\n", fileName.c_str(), size);
-
-	// Copy the data
-	unsigned unsigned char *ptr = (unsigned char*)img.data;
-	std::vector<unsigned char> temp(ptr, ptr + size);
-
-	/*
-	for (int i = 0; i < 65; i++) {
-		printf("%d\t", ptr[i]);
-	}
-	printf("\n");
-	*/
-
-	return temp;
-}
+#include"HostUtils.h"
 
 int main(void) {	
 	// File names
-	std::vector<std::string> fileNames = { "c1.jpg","c2.jpg","c3.jpg","c4.jpg" };
+	std::vector<std::string> fileNames = { "c1.jpg","c2.jpg","c3.jpg"};
 
 	// Container for images
 	std::vector<std::vector<unsigned char>> images;
@@ -60,6 +26,14 @@ int main(void) {
 		unsigned long long hash = dHash(images[i]);
 		hashes.push_back(hash);
 		printf("%llx\n", hash);
+	}
+
+	// Print hamming distances
+	for (int i = 0; i < hashes.size(); i++) {
+		for (int j = i + 1; j < hashes.size(); j++) {
+			printf("%d\t", hammingDistance(hashes[i], hashes[j]));
+		}
+		printf("\n");
 	}
 	
 	system("pause");

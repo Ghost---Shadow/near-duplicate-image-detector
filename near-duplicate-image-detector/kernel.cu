@@ -7,6 +7,7 @@
 #include<bitset>
 
 #include"kernel.h"
+#include"HostUtils.h"
 
 struct absdiff
 {
@@ -36,19 +37,6 @@ struct isGreaterFunctor
 		return x > y ? 1 : 0;
 	}
 };
-
-unsigned long long boolVectorToLongCpu(thrust::host_vector<bool> arr) {
-	unsigned long long result = 0;
-
-	assert(arr.size() == PIXELS);
-
-	unsigned long long temp;
-	for (int i = 0; i < PIXELS; i++) {
-		temp = arr[i];
-		result |= temp << (PIXELS - i - 1);
-	}
-	return result;
-}
 
 unsigned long long sumAbsoluteDifference(thrust::host_vector<unsigned char> h_a, thrust::host_vector<unsigned char> h_b) {
 	// Copy images to device
