@@ -9,11 +9,18 @@
 
 #include"kernel.h"
 
-std::vector<unsigned char> loadImage(std::string fileName) {
+std::vector<unsigned char> loadImage(std::string fileName, bool gray = true) {
 	// Read image to mat
 	cv::Mat img = cv::imread(fileName);
 	// Format 8b BGR BGR BGR
 	img.convertTo(img, CV_8U);
+
+	// To Gray
+	if (gray)
+		cv::cvtColor(img, img, cv::COLOR_BGR2GRAY);
+
+	// Resize to nxn
+	cv::resize(img, img, { SIZE,SIZE });
 
 	// Get total file size
 	size_t size = img.size().area() * img.channels();
@@ -24,7 +31,7 @@ std::vector<unsigned char> loadImage(std::string fileName) {
 	std::vector<unsigned char> temp(ptr, ptr + size);
 
 	/*
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 65; i++) {
 		printf("%d\t", ptr[i]);
 	}
 	printf("\n");
@@ -33,22 +40,28 @@ std::vector<unsigned char> loadImage(std::string fileName) {
 	return temp;
 }
 
-int main(void)
-{
+int main(void) {	
 	// File names
-	std::vector<std::string> fileNames = { "t1.png","t2.png" };
-	
+	std::vector<std::string> fileNames = { "c1.jpg","c2.jpg","c3.jpg" };
+
 	// Container for images
 	std::vector<std::vector<unsigned char>> images;
 
 	// Load all files
-	for (int i = 0; i < fileNames.size(); i++)
-		images.push_back(loadImage(fileNames[i]));	
+	for (int i = 0; i < fileNames.size(); i++) {
+		images.push_back(loadImage(fileNames[i]));
+	}
 
-	long result = sumAbsoluteDifference(images[0], images[1]);
+	//long result = sumAbsoluteDifference(images[0], images[1]);
 
-	std::cout << result << std::endl;
-
+	//std::cout << result << std::endl;
+	std::vector<unsigned long long> hashes;
+	for (int i = 0; i < images.size(); i++) {
+		unsigned long long hash = aHash(images[i]);
+		hashes.push_back(hash);
+		printf("%llu\n", hash);
+	}
+	
 	system("pause");
 	return 0;
 }

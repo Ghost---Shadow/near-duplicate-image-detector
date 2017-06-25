@@ -4,26 +4,73 @@
 #include<thrust/functional.h>
 
 #include <iostream>
+#include<bitset>
 
 #include"kernel.h"
 
 struct absdiff
 {
 	__host__ __device__
-		float operator()(const char& x, const char& y) const
-	{
+		float operator()(unsigned const char& x, unsigned const char& y) const {
 		return abs(x - y);
 	}
 };
 
-long sumAbsoluteDifference(thrust::host_vector<char> h_a, thrust::host_vector<char> h_b) {
-	thrust::device_vector<char> d_a = h_a;
-	thrust::device_vector<char> d_b = h_b;
+template <typename T>
+struct isGreaterThanAvg
+{
+	T avg;
+	isGreaterThanAvg(T avg) : avg(avg) {}
 
-	thrust::device_vector<char> d_res(h_a.size());
+	__host__ __device__
+		bool operator()(const T &value) const {
+		return value > avg ? 1 : 0;
+	}
+};
 
+unsigned long long boolVectorToLongCpu(thrust::host_vector<bool> arr) {
+	unsigned long long result = 0;
+
+	assert(arr.size() == PIXELS);
+
+	unsigned long long temp;
+	for (int i = 0; i < PIXELS; i++) {
+		temp = arr[i];
+		result |= temp << (PIXELS - i - 1);
+	}
+	return result;
+}
+
+unsigned long sumAbsoluteDifference(thrust::host_vector<unsigned char> h_a, thrust::host_vector<unsigned char> h_b) {
+	// Copy images to device
+	thrust::device_vector<unsigned char> d_a = h_a;
+	thrust::device_vector<unsigned char> d_b = h_b;
+
+	// Allocate space for result array
+	thrust::device_vector<unsigned char> d_res(h_a.size());
+
+	// Find absolute difference
 	thrust::transform(d_a.begin(), d_a.end(), d_b.begin(), d_res.begin(), absdiff());
-	long sum = thrust::reduce(d_res.begin(), d_res.end(), (long) 0 , thrust::plus<long>());
+
+	// Find summation of absolute difference
+	unsigned long sum = thrust::reduce(d_res.begin(), d_res.end(), (unsigned long)0, thrust::plus< unsigned long>());
 
 	return sum;
+}
+
+unsigned long aHash(thrust::host_vector<unsigned char> h_img) {
+	// Copy image to device
+	thrust::device_vector<unsigned char> d_img = h_img;
+
+	// Calculate average
+	unsigned char average = thrust::reduce(d_img.begin(), d_img.end(), (unsigned long)0, thrust::plus<unsigned long>()) / PIXELS;
+
+	// Allocate space for storing results
+	thrust::device_vector<bool> uncompacted(PIXELS);
+
+	// Set all the pixels greater than average
+	thrust::transform(d_img.begin(), d_img.end(), uncompacted.begin(), isGreaterThanAvg<unsigned char>(average));
+
+	// Compact on CPU because it is only 64 iterations
+	return boolVectorToLongCpu(uncompacted);
 }
