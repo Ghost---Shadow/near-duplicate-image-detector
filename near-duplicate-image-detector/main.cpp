@@ -42,7 +42,7 @@ std::vector<unsigned char> loadImage(std::string fileName, bool gray = true) {
 
 int main(void) {	
 	// File names
-	std::vector<std::string> fileNames = { "c1.jpg","c2.jpg","c3.jpg" };
+	std::vector<std::string> fileNames = { "c1.jpg","c2.jpg","c3.jpg","c4.jpg" };
 
 	// Container for images
 	std::vector<std::vector<unsigned char>> images;
@@ -59,7 +59,7 @@ int main(void) {
 	for (int i = 0; i < images.size(); i++) {
 		unsigned long long hash = aHash(images[i]);
 		hashes.push_back(hash);
-		printf("%llu\n", hash);
+		printf("%llx\n", hash);
 	}
 	
 	system("pause");

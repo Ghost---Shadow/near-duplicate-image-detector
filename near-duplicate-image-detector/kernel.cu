@@ -41,7 +41,7 @@ unsigned long long boolVectorToLongCpu(thrust::host_vector<bool> arr) {
 	return result;
 }
 
-unsigned long sumAbsoluteDifference(thrust::host_vector<unsigned char> h_a, thrust::host_vector<unsigned char> h_b) {
+unsigned long long sumAbsoluteDifference(thrust::host_vector<unsigned char> h_a, thrust::host_vector<unsigned char> h_b) {
 	// Copy images to device
 	thrust::device_vector<unsigned char> d_a = h_a;
 	thrust::device_vector<unsigned char> d_b = h_b;
@@ -53,12 +53,12 @@ unsigned long sumAbsoluteDifference(thrust::host_vector<unsigned char> h_a, thru
 	thrust::transform(d_a.begin(), d_a.end(), d_b.begin(), d_res.begin(), absdiff());
 
 	// Find summation of absolute difference
-	unsigned long sum = thrust::reduce(d_res.begin(), d_res.end(), (unsigned long)0, thrust::plus< unsigned long>());
+	unsigned long long sum = thrust::reduce(d_res.begin(), d_res.end(), (unsigned long)0, thrust::plus< unsigned long>());
 
 	return sum;
 }
 
-unsigned long aHash(thrust::host_vector<unsigned char> h_img) {
+unsigned long long aHash(thrust::host_vector<unsigned char> h_img) {
 	// Copy image to device
 	thrust::device_vector<unsigned char> d_img = h_img;
 
