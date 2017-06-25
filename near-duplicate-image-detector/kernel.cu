@@ -28,6 +28,15 @@ struct isGreaterThanAvg
 	}
 };
 
+template <typename T>
+struct isGreaterFunctor
+{
+	__host__ __device__
+		float operator()(const T& x, const T& y) const {
+		return x > y ? 1 : 0;
+	}
+};
+
 unsigned long long boolVectorToLongCpu(thrust::host_vector<bool> arr) {
 	unsigned long long result = 0;
 
@@ -71,6 +80,20 @@ unsigned long long aHash(thrust::host_vector<unsigned char> h_img) {
 	// Set all the pixels greater than average
 	thrust::transform(d_img.begin(), d_img.end(), uncompacted.begin(), isGreaterThanAvg<unsigned char>(average));
 
-	// Compact on CPU because it is only 64 iterations
+	// Compact on CPU
+	return boolVectorToLongCpu(uncompacted);
+}
+
+unsigned long long dHash(thrust::host_vector<unsigned char> h_img) {
+	// Copy image to device
+	thrust::device_vector<unsigned char> d_img = h_img;
+
+	// Allocate space for storing results
+	thrust::device_vector<bool> uncompacted(PIXELS);
+
+	// Calculate gradient
+	thrust::transform(d_img.begin(), d_img.end(), d_img.begin() + 1, uncompacted.begin(), isGreaterFunctor<unsigned char>());
+
+	// Compact on CPU
 	return boolVectorToLongCpu(uncompacted);
 }

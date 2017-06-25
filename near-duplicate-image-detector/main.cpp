@@ -57,7 +57,7 @@ int main(void) {
 	//std::cout << result << std::endl;
 	std::vector<unsigned long long> hashes;
 	for (int i = 0; i < images.size(); i++) {
-		unsigned long long hash = aHash(images[i]);
+		unsigned long long hash = dHash(images[i]);
 		hashes.push_back(hash);
 		printf("%llx\n", hash);
 	}
