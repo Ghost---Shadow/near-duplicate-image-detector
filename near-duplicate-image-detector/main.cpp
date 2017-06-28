@@ -3,32 +3,41 @@
 #include<string>
 #include<cstdio>
 
-#include"kernel.h"
+#include"aHashDevice.cuh"
+#include"dHashDevice.cuh"
 #include"HostUtils.h"
+#include"DeviceUtils.cuh"
 
 int main(void) {	
 	std::string path = "./";
 
 	// File names
+	printf("Getting list of files");
 	std::vector<std::string> fileNames = listFiles(path);
 
 	// Container for images
-	std::vector<std::vector<unsigned char>> images;
+	std::vector<unsigned char> images;
 
 	// Load all files
+	printf("Loading files\n");
 	for (int i = 0; i < fileNames.size(); i++) {
-		images.push_back(loadImage(fileNames[i]));
-	}
+		std::vector<unsigned char> image = loadImage(fileNames[i]);
+		images.insert(images.end(), image.begin(), image.end());
+	}	
+	printf("Files loaded\n");
+	printf("Total images: %d\n", images.size() / PIXELS);
 
 	// Compute hashes
-	std::vector<unsigned long long> hashes;
-	for (int i = 0; i < images.size(); i++) {
-		unsigned long long hash = dHash(images[i]);
-		hashes.push_back(hash);
-		printf("%llx\n", hash);
-	}
+	printf("Computing hashes\n");
+	std::vector<unsigned long long> hashes = dHashBatch(images);
+	printf("Hashes computed %d\n",hashes.size());
 
+	for (int i = 0; i < hashes.size(); i++) {
+		printf("%llx\n", hashes[i]);
+	}
+	
 	// Print hamming distances
+	printf("Hamming distances\n");
 	for (int i = 0; i < hashes.size(); i++) {
 		for (int j = i + 1; j < hashes.size(); j++) {
 			printf("%d\t", hammingDistance(hashes[i], hashes[j]));

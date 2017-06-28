@@ -13,7 +13,7 @@
 
 namespace fs = std::experimental::filesystem;
 
-unsigned long long boolVectorToLongCpu(thrust::host_vector<bool> arr) {
+unsigned long long compactCpu(thrust::host_vector<bool> arr) {
 	unsigned long long result = 0;
 
 	assert(arr.size() == PIXELS);
