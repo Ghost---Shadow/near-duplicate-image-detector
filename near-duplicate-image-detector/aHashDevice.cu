@@ -30,7 +30,7 @@ unsigned long long aHash(thrust::host_vector<unsigned char> h_img) {
 	thrust::transform(d_img.begin(), d_img.end(), uncompacted.begin(), isGreaterThanAvg<unsigned char>(average));
 
 	// Compact on CPU
-	return compactCpu(uncompacted);
+	return compactHost(uncompacted);
 }
 
 std::vector<unsigned long long> aHashBatch(thrust::host_vector<unsigned char> h_imgs) {

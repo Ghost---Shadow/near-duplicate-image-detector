@@ -13,7 +13,7 @@
 
 namespace fs = std::experimental::filesystem;
 
-unsigned long long compactCpu(thrust::host_vector<bool> arr) {
+unsigned long long compactHost(thrust::host_vector<bool> arr) {
 	unsigned long long result = 0;
 
 	assert(arr.size() == PIXELS);
@@ -71,7 +71,7 @@ std::vector<unsigned char> loadImage(std::string fileName, bool gray) {
 	return temp;
 }
 
-unsigned char hammingDistance(const unsigned long long &a, const unsigned long long &b) {
+unsigned char hammingDistanceHost(const unsigned long long &a, const unsigned long long &b) {
 	unsigned long long c = a ^ b;
 	unsigned char result = 0;
 

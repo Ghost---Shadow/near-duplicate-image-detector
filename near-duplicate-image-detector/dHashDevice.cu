@@ -25,7 +25,7 @@ unsigned long long dHash(thrust::host_vector<unsigned char> h_img) {
 	thrust::adjacent_difference(d_img.begin(), d_img.end(), uncompacted.begin(), isGreaterFunctor<unsigned char>());
 
 	// Compact on CPU
-	return compactCpu(uncompacted);
+	return compactHost(uncompacted);
 }
 
 std::vector<unsigned long long> dHashBatch(thrust::host_vector <unsigned char> h_imgs) {

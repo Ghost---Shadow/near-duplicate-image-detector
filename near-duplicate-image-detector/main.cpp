@@ -12,7 +12,7 @@ int main(void) {
 	std::string path = "./";
 
 	// File names
-	printf("Getting list of files");
+	printf("Getting list of files\n");
 	std::vector<std::string> fileNames = listFiles(path);
 
 	// Container for images
@@ -39,8 +39,9 @@ int main(void) {
 	// Print hamming distances
 	printf("Hamming distances\n");
 	for (int i = 0; i < hashes.size(); i++) {
-		for (int j = i + 1; j < hashes.size(); j++) {
-			printf("%d\t", hammingDistance(hashes[i], hashes[j]));
+		std::vector<unsigned char> distances = batchHamming(i, hashes);
+		for (int j = 0; j < distances.size(); j++) {
+			printf("%d\t", distances[j]);
 		}
 		printf("\n");
 	}
