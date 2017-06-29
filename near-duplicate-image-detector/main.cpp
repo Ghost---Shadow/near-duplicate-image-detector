@@ -2,6 +2,7 @@
 #include<vector>
 #include<string>
 #include<cstdio>
+#include<fstream>
 
 #include"HostUtils.h"
 #include"HostHashing.h"
@@ -42,14 +43,17 @@ int main(void) {
 	}
 	
 	// Print hamming distances
-	printf("Hamming distances\n");
+	printf("Calculating hamming distances\n");
+	std::ofstream handle("./hamming.csv");
 	for (int i = 0; i < hashes.size(); i++) {
 		std::vector<unsigned char> distances = batchHamming(i, hashes);
 		for (int j = 0; j < distances.size(); j++) {
-			printf("%d\t", distances[j]);
+			handle << int(distances[j]) << ",";
 		}
-		printf("\n");
+		handle << "\n";
 	}
+	handle.close();
+	printf("Written into csv file\n");
 	
 	system("pause");
 	return 0;
