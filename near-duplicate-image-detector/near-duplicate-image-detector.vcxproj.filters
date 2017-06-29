@@ -8,11 +8,13 @@
   <ItemGroup>
     <ClCompile Include="HostUtils.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="HostHashing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HostUtils.h" />
     <ClInclude Include="dHashDevice.cuh" />
     <ClInclude Include="aHashDevice.cuh" />
     <ClInclude Include="DeviceUtils.cuh" />
+    <ClInclude Include="HostHashing.h" />
   </ItemGroup>
 </Project>

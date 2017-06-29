@@ -24,13 +24,14 @@ unsigned long long aHash(thrust::host_vector<unsigned char> h_img) {
 	unsigned char average = thrust::reduce(d_img.begin(), d_img.end(), (unsigned long)0, thrust::plus<unsigned long>()) / PIXELS;
 
 	// Allocate space for storing results
-	thrust::device_vector<bool> uncompacted(PIXELS);
+	thrust::device_vector<bool> d_uncompacted(PIXELS);
 
 	// Set all the pixels greater than average
-	thrust::transform(d_img.begin(), d_img.end(), uncompacted.begin(), isGreaterThanAvg<unsigned char>(average));
+	thrust::transform(d_img.begin(), d_img.end(), d_uncompacted.begin(), isGreaterThanAvg<unsigned char>(average));
 
 	// Compact on CPU
-	return compactHost(uncompacted);
+	thrust::host_vector<bool> h_uncompacted = d_uncompacted;
+	return compactHost(std::vector<bool>(h_uncompacted.begin(), h_uncompacted.end()));
 }
 
 std::vector<unsigned long long> aHashBatch(thrust::host_vector<unsigned char> h_imgs) {

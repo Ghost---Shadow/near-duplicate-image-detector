@@ -162,6 +162,7 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
     <CudaCompile Include="dHashDevice.cu" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="HostHashing.cpp" />
     <ClCompile Include="HostUtils.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -169,6 +170,7 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
     <ClInclude Include="aHashDevice.cuh" />
     <ClInclude Include="DeviceUtils.cuh" />
     <ClInclude Include="dHashDevice.cuh" />
+    <ClInclude Include="HostHashing.h" />
     <ClInclude Include="HostUtils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

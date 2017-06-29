@@ -3,9 +3,11 @@
 #include<string>
 #include<cstdio>
 
+#include"HostUtils.h"
+#include"HostHashing.h"
+
 #include"aHashDevice.cuh"
 #include"dHashDevice.cuh"
-#include"HostUtils.h"
 #include"DeviceUtils.cuh"
 
 int main(void) {	
@@ -32,8 +34,11 @@ int main(void) {
 	std::vector<unsigned long long> hashes = dHashBatch(images);
 	printf("Hashes computed %d\n",hashes.size());
 
-	for (int i = 0; i < hashes.size(); i++) {
-		printf("%llx\n", hashes[i]);
+	for (int i = 0; i < images.size()/PIXELS; i++) {
+		auto start = images.begin() + (i * PIXELS);
+		std::vector<unsigned char> img(start, start + PIXELS);
+		printf("%llx %llx\n", hashes[i],dHashHost(img));
+		//printf("%llx %llx\n",aHashHost(img),dHashHost(img));
 	}
 	
 	// Print hamming distances

@@ -19,13 +19,14 @@ unsigned long long dHash(thrust::host_vector<unsigned char> h_img) {
 	thrust::device_vector<unsigned char> d_img = h_img;
 
 	// Allocate space for storing results
-	thrust::device_vector<bool> uncompacted(PIXELS);
+	thrust::device_vector<bool> d_uncompacted(PIXELS);
 
 	// Calculate gradient
-	thrust::adjacent_difference(d_img.begin(), d_img.end(), uncompacted.begin(), isGreaterFunctor<unsigned char>());
+	thrust::adjacent_difference(d_img.begin(), d_img.end(), d_uncompacted.begin(), isGreaterFunctor<unsigned char>());
 
 	// Compact on CPU
-	return compactHost(uncompacted);
+	thrust::host_vector<bool> h_uncompacted = d_uncompacted;
+	return compactHost(std::vector<bool>(h_uncompacted.begin(),h_uncompacted.end()));
 }
 
 std::vector<unsigned long long> dHashBatch(thrust::host_vector <unsigned char> h_imgs) {
@@ -33,11 +34,11 @@ std::vector<unsigned long long> dHashBatch(thrust::host_vector <unsigned char> h
 	thrust::device_vector<unsigned char> d_imgs = h_imgs;
 
 	// Uncompacted results
-	thrust::device_vector<bool> uncompacted(h_imgs.size());
+	thrust::device_vector<bool> d_uncompacted(h_imgs.size());
 
 	// Calculate gradient
-	thrust::adjacent_difference(d_imgs.begin(), d_imgs.end(), uncompacted.begin(), isGreaterFunctor<unsigned char>());
+	thrust::adjacent_difference(d_imgs.begin(), d_imgs.end(), d_uncompacted.begin(), isGreaterFunctor<unsigned char>());
 
 	// Return the compacted batch
-	return batchCompact(uncompacted);
+	return batchCompact(d_uncompacted);
 }

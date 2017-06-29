@@ -7,13 +7,11 @@
 #include<opencv2\core.hpp>
 #include<opencv2\opencv.hpp>
 
-#include <thrust/host_vector.h>
-
 #include"HostUtils.h"
 
 namespace fs = std::experimental::filesystem;
 
-unsigned long long compactHost(thrust::host_vector<bool> arr) {
+unsigned long long compactHost(std::vector<bool> arr) {
 	unsigned long long result = 0;
 
 	assert(arr.size() == PIXELS);
