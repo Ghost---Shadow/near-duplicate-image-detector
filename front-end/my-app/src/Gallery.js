@@ -5,7 +5,7 @@ class Image extends Component {
     render() {
         return (
             <span className="image-container">
-                <img src={this.props.src} alt={this.props.src} />
+                <img src={this.props.src} alt={this.props.src} onClick={this.props.onClick} />
                 <span>{this.props.distance}</span>
             </span>
         );
@@ -23,7 +23,7 @@ class Gallery extends Component {
 
         fetch(this.baseUrl + "/list.json", { mode: "cors" })
             .then(resp => resp.json())
-            .then(json => { this.setState(json); this.state.copyImages = this.state.images.slice() })
+            .then(json => { json.copyImages = json.images.slice(); this.setState(json); })
             .catch(err => console.log(err));
 
         this.sort = this.sort.bind(this);
@@ -31,28 +31,37 @@ class Gallery extends Component {
 
     sort() {
         var copyImages = this.state.copyImages.slice();
-        const distance = this.state.copyImages[this.state.currentSelection][1];
+        const distance = this.state.images[this.state.currentSelection][1];
 
         const result = copyImages.map((item, index) => [distance[index], item])
             .sort(([index1], [index2]) => index1 - index2)
             .map(([, item]) => item);
 
-        console.log(result);
+        //console.log(result);
 
         this.setState({ "images": result });
     }
 
+    handleClick(key) {
+        this.state.currentSelection = key;
+        this.sort();
+    }
+
     render() {
+        var sortedDistances = [];
+        if (this.state.images[0])
+            sortedDistances = this.state.images[0][1].sort();
+
         const images = this.state.images.map((value, key) => {
             return (
                 <Image key={key}
                     src={this.baseUrl + "/" + value[0]}
-                    distance={value[1][this.state.currentSelection]} />
+                    distance={sortedDistances[key]}
+                    onClick={() => this.handleClick(key)} />
             );
         });
         return (
             <div className="wrapper">
-                <button onClick={this.sort}>Sort</button>
                 {images}
             </div>
         );
