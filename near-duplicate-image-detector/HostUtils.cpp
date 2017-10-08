@@ -9,6 +9,7 @@
 #include<opencv2\opencv.hpp>
 
 #include"HostUtils.h"
+#include"DeviceUtils.cuh"
 
 namespace fs = std::experimental::filesystem;
 
@@ -39,6 +40,30 @@ std::vector<std::string> listFiles(std::string path) {
 	return fileNames;
 }
 
+void dumpJson(std::string path,
+	std::string jsonName,
+	std::vector<std::string> fileNames,
+	std::vector<unsigned long long> hashes) {
+
+	std::ofstream handle(path+jsonName);
+	handle << "{\n\t\"images\":[\n";
+	for (int i = 0; i < hashes.size(); i++) {
+		std::vector<unsigned char> distances = batchHamming(i, hashes);
+		handle << "\t\t[\"" << fileNames[i].substr(path.length()) << "\",[";
+		for (int j = 0; j < distances.size(); j++) {
+			handle << int(distances[j]);
+			if (j < distances.size() - 1)
+				handle << ",";
+		}
+		handle << "]]";
+		if (i < hashes.size() - 1)
+			handle << ",";
+		handle << "\n";
+	}
+	handle << "\t]\n}";
+	handle.close();
+}
+
 std::vector<unsigned char> loadImage(std::string fileName, bool gray) {
 	// Read image to mat
 	cv::Mat img = cv::imread(fileName);
@@ -59,7 +84,7 @@ std::vector<unsigned char> loadImage(std::string fileName, bool gray) {
 	// Copy the data
 	unsigned unsigned char *ptr = (unsigned char*)img.data;
 	std::vector<unsigned char> temp(ptr, ptr + size);
-	
+
 	return temp;
 }
 

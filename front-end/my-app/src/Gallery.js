@@ -43,7 +43,7 @@ class Gallery extends Component {
     }
 
     handleClick(key) {
-        this.state.currentSelection = key;
+        this.setState({"currentSelection":key});
         this.sort();
     }
 
