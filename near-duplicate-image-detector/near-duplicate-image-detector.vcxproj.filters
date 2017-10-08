@@ -4,6 +4,7 @@
     <CudaCompile Include="dHashDevice.cu" />
     <CudaCompile Include="aHashDevice.cu" />
     <CudaCompile Include="DeviceUtils.cu" />
+    <CudaCompile Include="CudaResize.cu" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HostUtils.cpp" />
@@ -16,5 +17,6 @@
     <ClInclude Include="aHashDevice.cuh" />
     <ClInclude Include="DeviceUtils.cuh" />
     <ClInclude Include="HostHashing.h" />
+    <ClInclude Include="CudaResize.cuh" />
   </ItemGroup>
 </Project>
