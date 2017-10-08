@@ -13,7 +13,8 @@
 #include"CudaResize.cuh"
 
 int main(void) {	
-	std::string path = "./images/";
+	//std::string path = "./images/";
+	std::string path = "E:/The Vampire Diaries/New folder/000-099/";
 
 	// File names
 	printf("Getting list of files\n");
@@ -21,19 +22,21 @@ int main(void) {
 	
 	// Load all files
 	printf("Loading files\n");
-	std::vector<unsigned char> images = loadAllFilesDevice(fileNames);
-	/*for (int i = 0; i < fileNames.size(); i++) {
+	std::vector<unsigned char> images;
+	//images = loadAllFilesDevice(fileNames,1);
+	
+	for (int i = 0; i < fileNames.size(); i++) {
 		std::vector<unsigned char> image = loadImage(fileNames[i]);
 		images.insert(images.end(), image.begin(), image.end());
-	}*/	
+	}	
 	printf("Files loaded\n");
 	printf("Total images: %d\n", images.size() / PIXELS);
 	
 	// Compute hashes
 	printf("Computing hashes\n");
-	std::vector<unsigned long long> hashes = dHashBatch(images);
+	std::vector<unsigned long long> hashes = dHashBatch(images,10);
 	printf("Hashes computed %d\n",hashes.size());
-
+	
 	for (int i = 0; i < images.size()/PIXELS; i++) {
 		auto start = images.begin() + (i * PIXELS);
 		std::vector<unsigned char> img(start, start + PIXELS);

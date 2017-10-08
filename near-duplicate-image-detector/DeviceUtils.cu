@@ -56,7 +56,7 @@ std::vector<unsigned long long> batchCompact(thrust::device_vector<bool> d_conti
 	compactBatchKernel << <blocks, THREADS >> > (d_contiguousPtr, d_resultsPtr, size);
 
 	// Results
-	thrust::host_vector<unsigned long long> h_results = d_results;
+	thrust::host_vector<unsigned char> h_results = d_results;
 	return std::vector<unsigned long long>(h_results.begin(), h_results.end());
 }
 

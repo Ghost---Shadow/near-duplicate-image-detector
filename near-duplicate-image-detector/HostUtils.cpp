@@ -49,7 +49,9 @@ void dumpJson(std::string path,
 	handle << "{\n\t\"images\":[\n";
 	for (int i = 0; i < hashes.size(); i++) {
 		std::vector<unsigned char> distances = batchHamming(i, hashes);
-		handle << "\t\t[\"" << fileNames[i].substr(path.length()) << "\",[";
+		std::string imageName = fileNames[i].substr(path.length());
+		std::replace(imageName.begin(), imageName.end(), '\\', '/');
+		handle << "\t\t[\"" << imageName << "\",[";
 		for (int j = 0; j < distances.size(); j++) {
 			handle << int(distances[j]);
 			if (j < distances.size() - 1)
@@ -64,7 +66,7 @@ void dumpJson(std::string path,
 	handle.close();
 }
 
-std::vector<unsigned char> loadImage(std::string fileName, bool gray) {
+std::vector<unsigned char> loadImageOpenCv(std::string fileName, bool gray) {
 	// Read image to mat
 	cv::Mat img = cv::imread(fileName);
 	// Format 8b BGR BGR BGR
@@ -77,6 +79,23 @@ std::vector<unsigned char> loadImage(std::string fileName, bool gray) {
 	// Resize to nxn
 	cv::resize(img, img, { SIZE,SIZE });
 
+	// Get total file size
+	size_t size = img.size().area() * img.channels();
+	printf("%s\t%d bytes\n", fileName.c_str(), size);
+
+	// Copy the data
+	unsigned unsigned char *ptr = (unsigned char*)img.data;
+	std::vector<unsigned char> temp(ptr, ptr + size);
+
+	return temp;
+}
+
+std::vector<unsigned char> loadImage(std::string fileName, bool gray) {
+	// Read image to mat
+	cv::Mat img = cv::imread(fileName);
+	// Format 8b BGR BGR BGR
+	img.convertTo(img, CV_8U);
+	
 	// Get total file size
 	size_t size = img.size().area() * img.channels();
 	printf("%s\t%d bytes\n", fileName.c_str(), size);
