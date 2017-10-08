@@ -35,8 +35,8 @@ struct hammingFunctor {
 		unsigned char result = 0;
 
 		while (c) {
-			result += c & 1;
-			c >>= 1;
+			c &= (c - 1);
+			result++;
 		}
 
 		return result;
@@ -64,10 +64,10 @@ std::vector<unsigned char> batchHamming(size_t base, thrust::device_vector<unsig
 	thrust::device_vector<unsigned char> d_distances(d_hashes.size());
 	thrust::device_vector<unsigned long long> d_base(d_hashes.size());
 	thrust::fill(d_base.begin(), d_base.end(), d_hashes[base]);
-	
+
 	// Compute hamming distances
 	thrust::transform(d_hashes.begin(), d_hashes.end(), d_base.begin(), d_distances.begin(), hammingFunctor());
-	
+
 	thrust::host_vector<unsigned char> h_distances = d_distances;
 	return std::vector<unsigned char>(h_distances.begin(), h_distances.end());
 }
@@ -90,7 +90,7 @@ void test() {
 /*
 void test() {
 	std::vector<unsigned long long> t(3);
-	t[0] = 0x8004022a17938700;	
+	t[0] = 0x8004022a17938700;
 	t[1] = 0x322454546478e860;
 	t[2] = 0xc11a2abad1baa851;
 

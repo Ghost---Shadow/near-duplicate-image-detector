@@ -3,6 +3,7 @@
 #include<string>
 #include<cstdio>
 #include <filesystem>
+#include<bitset>
 
 #include<opencv2\core.hpp>
 #include<opencv2\opencv.hpp>
@@ -58,25 +59,12 @@ std::vector<unsigned char> loadImage(std::string fileName, bool gray) {
 	// Copy the data
 	unsigned unsigned char *ptr = (unsigned char*)img.data;
 	std::vector<unsigned char> temp(ptr, ptr + size);
-
-	/*
-	for (int i = 0; i < 65; i++) {
-	printf("%d\t", ptr[i]);
-	}
-	printf("\n");
-	*/
-
+	
 	return temp;
 }
 
 unsigned char hammingDistanceHost(const unsigned long long &a, const unsigned long long &b) {
-	unsigned long long c = a ^ b;
-	unsigned char result = 0;
-
-	while (c) {
-		result += c & 1;
-		c >>= 1;
-	}
-
-	return result;
+	unsigned long long x = a ^ b;
+	std::bitset<64> bx(x);
+	return bx.count();
 }
