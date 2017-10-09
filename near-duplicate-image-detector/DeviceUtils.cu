@@ -11,7 +11,7 @@
 #include"DeviceUtils.cuh"
 #include"HostUtils.h"
 
-__device__ unsigned long long compactKernel(bool * arr) {
+__device__ unsigned long long compactKernel(const bool * arr) {
 	unsigned long long result = 0;
 	unsigned long long temp;
 	for (int i = 0; i < PIXELS; i++) {
@@ -21,7 +21,7 @@ __device__ unsigned long long compactKernel(bool * arr) {
 	return result;
 }
 
-__global__ void compactBatchKernel(bool * d_contiguous, unsigned long long *d_results, int n) {
+__global__ void compactBatchKernel(const bool * d_contiguous, unsigned long long *d_results,const int n) {
 	size_t idx = threadIdx.x + blockDim.x * blockIdx.x;
 	if (idx >= n)
 		return;
@@ -43,21 +43,24 @@ struct hammingFunctor {
 	}
 };
 
-std::vector<unsigned long long> batchCompact(thrust::device_vector<bool> d_contiguous) {
+void batchCompact(const thrust::device_vector<bool> d_contiguous,
+	thrust::host_vector <unsigned long long,
+	thrust::cuda::experimental::pinned_allocator<unsigned long long>> &h_contiguous,
+	cudaStream_t &s) {
+	
 	size_t size = d_contiguous.size() / PIXELS;
 	thrust::device_vector<unsigned long long> d_results(size);
 
 	// Cast to pointers
-	bool* d_contiguousPtr = thrust::raw_pointer_cast(&d_contiguous[0]);
-	unsigned long long* d_resultsPtr = thrust::raw_pointer_cast(&d_results[0]);
+	const bool* d_contiguousPtr = thrust::raw_pointer_cast(d_contiguous.data());
+	unsigned long long* d_resultsPtr = thrust::raw_pointer_cast(d_results.data());
 
 	// Compact
 	size_t blocks = ceil(size / THREADS) + 1;
 	compactBatchKernel << <blocks, THREADS >> > (d_contiguousPtr, d_resultsPtr, size);
 
 	// Results
-	thrust::host_vector<unsigned char> h_results = d_results;
-	return std::vector<unsigned long long>(h_results.begin(), h_results.end());
+	cudaMemcpyAsync(thrust::raw_pointer_cast(h_contiguous.data()), d_resultsPtr, d_results.size() * sizeof(unsigned long long), cudaMemcpyDeviceToHost, s);
 }
 
 std::vector<unsigned char> batchHamming(size_t base, thrust::device_vector<unsigned long long> d_hashes) {

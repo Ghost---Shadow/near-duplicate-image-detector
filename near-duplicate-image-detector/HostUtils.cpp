@@ -101,8 +101,13 @@ std::vector<unsigned char> loadImage(std::string fileName, bool gray) {
 	printf("%s\t%d bytes\n", fileName.c_str(), size);
 
 	// Copy the data
-	unsigned unsigned char *ptr = (unsigned char*)img.data;
-	std::vector<unsigned char> temp(ptr, ptr + size);
+	unsigned char *ptr = (unsigned char*)img.data;
+	std::vector<unsigned char> temp(PIXELS);
+	size_t skip = size / PIXELS;
+	for (int i = 0; i < PIXELS; i++) {
+		size_t offset = i * skip;
+		temp[i] = (ptr[offset] + ptr[offset + 1] + ptr[offset + 2]) / 3;
+	}
 
 	return temp;
 }
