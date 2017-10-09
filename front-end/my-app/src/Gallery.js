@@ -16,10 +16,10 @@ class Gallery extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            "images": [],
-            "currentSelection": 0
+            "images": []
         }
         this.baseUrl = "http://localhost:8080";
+        this.currentSelection = 0;
 
         fetch(this.baseUrl + "/list.json", { mode: "cors" })
             .then(resp => resp.json())
@@ -31,26 +31,26 @@ class Gallery extends Component {
 
     sort() {
         var copyImages = this.state.copyImages.slice();
-        const distance = this.state.images[this.state.currentSelection][1];
+        const distance = this.state.images[this.currentSelection][1];
 
         const result = copyImages.map((item, index) => [distance[index], item])
             .sort(([index1], [index2]) => index1 - index2)
             .map(([, item]) => item);
 
-        //console.log(result);
-
         this.setState({ "images": result });
     }
 
     handleClick(key) {
-        this.setState({"currentSelection":key});
+        this.currentSelection = key;
         this.sort();
     }
 
     render() {
         var sortedDistances = [];
-        if (this.state.images[0])
-            sortedDistances = this.state.images[0][1].sort();
+        if (this.state.images[0]){
+            sortedDistances = this.state.images[0][1].slice();
+            sortedDistances.sort();
+        }
 
         const images = this.state.images.map((value, key) => {
             return (
