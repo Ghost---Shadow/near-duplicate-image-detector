@@ -58,7 +58,7 @@ void dumpJson(std::string path,
 				handle << ",";
 		}
 		handle << "]]";
-		if (i < hashes.size() - 1)
+		if (i < fileNames.size() - 1)
 			handle << ",";
 		handle << "\n";
 	}

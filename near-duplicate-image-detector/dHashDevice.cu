@@ -72,5 +72,6 @@ std::vector<unsigned long long> dHashBatch(std::vector<unsigned char> v_imgs, si
 	cudaStreamDestroy(s);
 	
 	// Return the compacted batch
+	results.resize(imageCount);
 	return results;
 }
