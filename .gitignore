@@ -243,4 +243,4 @@ ModelManifest.xml
 
 # Custom
 *.csv
-./near-duplicate-image-detector/images/list.json
+near-duplicate-image-detector/images/list.json
