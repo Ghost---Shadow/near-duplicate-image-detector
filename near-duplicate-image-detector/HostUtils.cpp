@@ -47,7 +47,7 @@ void dumpJson(std::string path,
 
 	std::ofstream handle(path+jsonName);
 	handle << "{\n\t\"images\":[\n";
-	for (int i = 0; i < hashes.size(); i++) {
+	for (int i = 0; i < fileNames.size(); i++) {
 		std::vector<unsigned char> distances = batchHamming(i, hashes);
 		std::string imageName = fileNames[i].substr(path.length());
 		std::replace(imageName.begin(), imageName.end(), '\\', '/');

@@ -49,6 +49,11 @@ std::vector<unsigned long long> dHashBatch(std::vector<unsigned char> v_imgs, si
 	thrust::device_vector<bool> d_uncompacted(h_imgs.size());
 
 	for (int i = 0; i < imageCount; i += batchSize) {
+		// If the batch is partially full then decrease batch size
+		if (imageCount - i < batchSize) {
+			batchSize = imageCount - i;
+		}
+
 		thrust::copy(v_imgs.begin() + i * PIXELS, v_imgs.begin() + (i + batchSize) * PIXELS, h_imgs.begin());
 		cudaMemcpyAsync(thrust::raw_pointer_cast(d_imgs.data()), thrust::raw_pointer_cast(h_imgs.data()), d_imgs.size() * sizeof(unsigned char), cudaMemcpyHostToDevice, s);
 

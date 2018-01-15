@@ -157,8 +157,6 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
     </CudaCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CudaCompile Include="aHashDevice.cu" />
-    <CudaCompile Include="CudaResize.cu" />
     <CudaCompile Include="DeviceUtils.cu" />
     <CudaCompile Include="dHashDevice.cu" />
   </ItemGroup>
@@ -168,8 +166,6 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="aHashDevice.cuh" />
-    <ClInclude Include="CudaResize.cuh" />
     <ClInclude Include="DeviceUtils.cuh" />
     <ClInclude Include="dHashDevice.cuh" />
     <ClInclude Include="HostHashing.h" />
