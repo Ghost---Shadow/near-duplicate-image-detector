@@ -5,6 +5,7 @@
   "dependencies": {
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
+    "react-proptypes": "^1.0.0",
     "react-scripts": "1.0.14"
   },
   "scripts": {
@@ -12,5 +13,13 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.2.2",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.10.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.7.0"
   }
 }
