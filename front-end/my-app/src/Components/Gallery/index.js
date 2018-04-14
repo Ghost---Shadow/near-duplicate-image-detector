@@ -51,7 +51,7 @@ class Gallery extends React.Component {
     this.sortImages();
   }
 
-  generateImageComponents = () =>
+  ImageList = () =>
     this.state.images.map((value, key) => {
       const imageKey = `img_${key}`;
       return (
@@ -67,7 +67,7 @@ class Gallery extends React.Component {
   render() {
     return (
       <div className="Gallery-wrapper">
-        {this.generateImageComponents()}
+        <this.ImageList />
       </div>
     );
   }
