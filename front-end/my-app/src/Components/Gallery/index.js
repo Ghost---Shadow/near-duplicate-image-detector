@@ -18,6 +18,10 @@ class Gallery extends React.Component {
   }
 
   async componentDidMount() {
+    this.populateGallery();
+  }
+
+  populateGallery = async () => {
     const response = await fetch(`${BASE_URL}${LIST_JSON_ROUTE}`, { mode: 'cors' });
     const json = await response.json();
 
@@ -34,7 +38,7 @@ class Gallery extends React.Component {
     // Sort images by distance from currentSelection
     const result = this.state.copyImages
       .map((item, index) => [distance[index], item])
-      .sort(([index1], [index2]) => index1 - index2);
+      .sort(([distance1], [distance2]) => distance1 - distance2);
 
     // Extract images and distances into two arrays
     const images = result.map(([, image]) => image);
@@ -52,17 +56,14 @@ class Gallery extends React.Component {
   }
 
   ImageList = () =>
-    this.state.images.map((value, key) => {
-      const imageKey = `img_${key}`;
-      return (
-        <Image
-          key={imageKey}
-          src={`${BASE_URL}/${value[0]}`}
-          distance={this.state.sortedDistances[key]}
-          onClick={() => this.handleClick(key)}
-        />
-      );
-    })
+    this.state.images.map((value, key) => (
+      <Image
+        key={value[0]}
+        src={`${BASE_URL}/${value[0]}`}
+        distance={this.state.sortedDistances[key]}
+        onClick={() => this.handleClick(key)}
+      />
+    ))
 
   render() {
     return (

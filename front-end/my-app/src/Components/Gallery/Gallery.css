@@ -1,3 +1,5 @@
 .Gallery-wrapper {
   margin: 5%; 
+  display: flex;
+  flex-flow: wrap;
 }
